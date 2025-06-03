@@ -131,6 +131,8 @@ class SetList extends Component {
     };
     handleNameChange = (e) =>{
         this.setState({selectedName: e.target.value});
+        console.log("Name input:", e.target.value);
+
     }
     render() { 
         return (
@@ -155,9 +157,13 @@ class SetList extends Component {
             </select>
             <br /><br />
             <div id="error"></div>
-            <button type="button" onClick={() => this.props.fetchCards(this.state.selectedSet, this.state.selectedName)}>
+            <button type="button" onClick={() => {
+                console.log("Search with:", this.state.selectedSet, this.state.selectedName);
+                this.props.fetchCards(this.state.selectedSet, this.state.selectedName);
+                }}>
                 Search
             </button>
+
             <br /><br />
             </form>
             </div>

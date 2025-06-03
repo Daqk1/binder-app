@@ -2,41 +2,35 @@ import React, { Component } from 'react';
 import SetList from './list';
 
 class Display extends Component {
-  state = {
-    list: []
-  };
+ fetchCards = async (setName = "journey-together", cardName = "") => {
+  const userId = this.props.userId || "1234";
+  try {
+    const cardsResponse = await fetch(`/api/cards?setName=${setName}&cardName=${encodeURIComponent(cardName)}`);
+    const cards = await cardsResponse.json();
 
-  fetchCards = (setName, cardName) => {
-    const params = new URLSearchParams();
+    const userResponse = await fetch(`/api/cards/user?userId=${userId}`);
+    const userCards = await userResponse.json();
 
-    if (setName) {
-      params.append("setName", setName);
-    }
-    if (cardName) {
-      params.append("cardName", cardName);
-    }
+    const cardsWithCounts = cards.map(card => ({
+      ...card,
+      cardNumberOfCards: userCards[card.cardId]?.count || 0,
+    }));
 
-    fetch(`/api/cards?${params.toString()}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.setState({ list: data }, () => {
-          if (this.props.onDataFetched) {
-            this.props.onDataFetched(this.state.list);
-          }
-        });
-      })
-      .catch(error => console.error('Fetch error:', error));
-  };
+    this.props.onDataFetched(cardsWithCounts);
+  } catch (error) {
+    console.error("Error fetching cards:", error);
+  }
+};
+
+
+  componentDidMount() {
+    this.fetchCards();
+  }
 
   render() {
     return (
       <React.Fragment>
-        <SetList fetchCards={this.fetchCards} />
+        <SetList fetchCards={this.fetchCards} userId={this.props.userId} />
       </React.Fragment>
     );
   }

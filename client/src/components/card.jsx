@@ -14,7 +14,7 @@ class Card extends Component {
               <p>Price: ${card.cardPrice}</p>
               <div className="b">
                 <button className="minusButton" onClick={() => subtractCard(card)}>-</button>
-                <p>{card.cardNumberOfCards}</p>
+                <p className = "count">{card.cardNumberOfCards}</p>
                 <button className="addButton" onClick={() => addCard(card)}>+</button>
               </div>
               <a href={card.cardUrl} target="_blank" rel="noopener noreferrer">View Card</a>
