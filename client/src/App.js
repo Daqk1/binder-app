@@ -13,6 +13,16 @@ class App extends Component {
   state = {
     cards: [],
     userId:"1234",
+    order: [
+      {id: "Numerical", value: "numbers"},
+      {id: "Price (Acending)",
+        value: "most"
+      },
+      {id: "Price (Decending)",
+        value: "least"
+      }
+    ],
+    selectedOrder: ""
   };
 
   addCard = async (card) => {
@@ -78,9 +88,42 @@ subtractCard = async (card) => {
 };
 
   displayCards = (data) => {
-    this.setState({ cards: data });
+  const sorted = this.sortCards(data, this.state.selectedOrder);
+  this.setState({ cards: sorted });
+};
+
+  sortCards = (cards, selectedOrder) => {
+  switch (selectedOrder) {
+    case "numbers":
+      return [...cards].sort((a, b) => {
+        // Assuming cardId is a number or string like "001", "002"
+        return a.cardId.localeCompare(b.cardId, undefined, { numeric: true });
+      });
+
+    case "most":
+      return [...cards].sort((a, b) => parseFloat(a.cardPrice) - parseFloat(b.cardPrice));
+
+    case "least":
+      return [...cards].sort((a, b) => parseFloat(b.cardPrice) - parseFloat(a.cardPrice));
+
+    default:
+      return cards;
+  }
+};
+
+  selectedOrder = (event) => {
+     const selectedValue = event.target.value;
+    const sorted = this.sortCards(this.state.cards, selectedValue);
+
+    this.setState({
+      selectedOrder: selectedValue,
+      cards: sorted
+    });
+
+    console.log("Order Changed:", selectedValue);
   };
 
+  
   render() {
     return (
       <div className="layout-container">
@@ -92,8 +135,19 @@ subtractCard = async (card) => {
             <>
               <div className="main-container">
                 <Display onDataFetched={this.displayCards} userId = {this.state.userId} />
-              </div>
-                    
+                    <select
+                        id="order"
+                        name="displayOrder"
+                        value={this.state.selectedOrder}
+                        onChange={this.selectedOrder}
+                      >
+                        {this.state.order.map(order => (
+                          <option key={order.id} value={order.value}>
+                            {order.id}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
               <div className="cards-container">
                 <Cards
                   cards={this.state.cards}

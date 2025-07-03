@@ -27,34 +27,6 @@
     "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/36e83ae657548a3b199cdb3eeb7cd6f4d840fac22f3f450627e8bbc189083566/240.jpg",
     "count": 2
   },
-  "furious-fists_154": {
-    "cardName": "Sylveon [Cracked Ice Holo] #72",
-    "cardPrice": 16.61,
-    "cardUrl": "https://www.pricecharting.com/game/pokemon-furious-fists/sylveon-cracked-ice-holo-72",
-    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/409581c4a002ad61ab11f87d0b462eb346e12de8aa4665dbc9b5e67f5fa9cb72/240.jpg",
-    "count": 2
-  },
-  "generations_174": {
-    "cardName": "Sylveon EX #RC21",
-    "cardPrice": 35,
-    "cardUrl": "https://www.pricecharting.com/game/pokemon-generations/sylveon-ex-rc21",
-    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/248f33ab90e5bf837e2d1cddda4fa7aabc0fbde17f99c4215d0178f36f9fe715/240.jpg",
-    "count": 3
-  },
-  "generations_190": {
-    "cardName": "Sylveon EX #RC32",
-    "cardPrice": 74.99,
-    "cardUrl": "https://www.pricecharting.com/game/pokemon-generations/sylveon-ex-rc32",
-    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/cfc54d9f8db4a0d3aedaa4870c82c3d6690c4776d89d987341aa37f4f31aaf7c/240.jpg",
-    "count": 3
-  },
-  "guardians-rising_188": {
-    "cardName": "Sylveon GX #92",
-    "cardPrice": 13.11,
-    "cardUrl": "https://www.pricecharting.com/game/pokemon-guardians-rising/sylveon-gx-92",
-    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/0d9f353b5a9a58dd592c6dc965a884e4c46f746c07598864fb8877f7e1bbc954/240.jpg",
-    "count": 2
-  },
   "guardians-rising_276": {
     "cardName": "Sylveon GX #140",
     "cardPrice": 28.1,
@@ -81,6 +53,34 @@
     "cardPrice": 8.64,
     "cardUrl": "https://www.pricecharting.com/game/pokemon-obsidian-flames/houndour-204",
     "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/45a2346e5b47943b47d81cf8944f49c525ae829dc93179ffb3caa9ad84ecbc34/240.jpg",
+    "count": 1
+  },
+  "surging-sparks_416": {
+    "cardName": "Pikachu ex #238",
+    "cardPrice": 274.51,
+    "cardUrl": "https://www.pricecharting.com/game/pokemon-surging-sparks/pikachu-ex-238",
+    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/nu6mlfz4knn7uwl7/240.jpg",
+    "count": 1
+  },
+  "expedition_330": {
+    "cardName": "Booster Box",
+    "cardPrice": 17699.5,
+    "cardUrl": "https://www.pricecharting.com/game/pokemon-expedition/booster-box",
+    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/j55lylo4jjskx3ry/240.jpg",
+    "count": 3
+  },
+  "expedition_332": {
+    "cardName": "Manhole [For Position Only]",
+    "cardPrice": 2990.46,
+    "cardUrl": "https://www.pricecharting.com/game/pokemon-expedition/manhole-for-position-only",
+    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/8e1629917e1d48221d36ba708e9fbf72299e877e57dd10f7583790a9aa6ab9fd/240.jpg",
+    "count": 3
+  },
+  "expedition_86": {
+    "cardName": "Clefable [For Position Only] #41",
+    "cardPrice": 2600.75,
+    "cardUrl": "https://www.pricecharting.com/game/pokemon-expedition/clefable-for-position-only-41",
+    "cardPicture": "https://storage.googleapis.com/images.pricecharting.com/e37303ab03deee6311ab6f233e551e72dff63a0d53563638a3c86573d104c0b1/240.jpg",
     "count": 1
   }
 }
