@@ -2,9 +2,24 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+require('dotenv').config();
+const mongoose = require('mongoose');
+const User = require('./user.model');
 
 const app = express();
 const PORT = 14000;
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch((err) => {
+  console.error('❌ MongoDB connection error:', err);
+  process.exit(1);
+});
 
 app.use(cors());
 app.use(express.json());
@@ -118,38 +133,44 @@ app.get("/api/cards", (req, res) => {
   res.json(filtered);
 });
 
-app.get("/api/cards/user", (req, res) => {
+app.get("/api/cards/user", async (req, res) => {
   const { userId } = req.query;
   if (!userId) return res.status(400).json({ error: "Missing userId" });
 
-  const data = readUserData(userId);
-  res.json(data);
+  try {
+    let user = await User.findOne({ userId });
+    if (!user) {
+      user = new User({ userId, collection: {} });
+      await user.save();
+    }
+    res.json(Object.fromEntries(user.collection));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch user data" });
+  }
 });
 
-app.post("/api/cards/update", (req, res) => {
+app.post("/api/cards/update", async (req, res) => {
   const { userId, cardName, cardPrice, cardUrl, cardPicture, cardId, count } = req.body;
 
   if (!userId || !cardId || typeof count !== 'number') {
     return res.status(400).json({ error: "Missing userId, cardId, or count" });
   }
 
-  const userCards = readUserData(userId);
-
-  if (count > 0) {
-    userCards[cardId] = {
-      cardName,
-      cardPrice,
-      cardUrl,
-      cardPicture,
-      count
-    };
-  } else {
-    delete userCards[cardId];
+  try {
+    let user = await User.findOne({ userId });
+    if (!user) {
+      user = new User({ userId, collection: {} });
+    }
+    if (count > 0) {
+      user.collection.set(cardId, { cardId, cardName, cardPrice, cardUrl, cardPicture, count });
+    } else {
+      user.collection.delete(cardId);
+    }
+    await user.save();
+    res.json({ message: "User card data updated successfully", userCards: Object.fromEntries(user.collection) });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update user data" });
   }
-
-  writeUserData(userId, userCards);
-
-  res.json({ message: "User card data updated successfully", userCards });
 });
 
 app.get('/', (req, res) => {
