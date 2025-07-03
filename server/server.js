@@ -4,7 +4,7 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5000;
+const PORT = 14000;
 
 app.use(cors());
 app.use(express.json());
@@ -118,9 +118,6 @@ app.get("/api/cards", (req, res) => {
   res.json(filtered);
 });
 
-
-
-
 app.get("/api/cards/user", (req, res) => {
   const { userId } = req.query;
   if (!userId) return res.status(400).json({ error: "Missing userId" });
@@ -155,7 +152,8 @@ app.post("/api/cards/update", (req, res) => {
   res.json({ message: "User card data updated successfully", userCards });
 });
 
-
-
+app.get('/', (req, res) => {
+  res.send('API server is running.');
+});
 
 app.listen(PORT, () => console.log(`✅ Server is running on http://localhost:${PORT}`));
