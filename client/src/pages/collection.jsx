@@ -7,15 +7,14 @@ class CollectionPage extends Component {
     totalPrice: 0
   };
 
-  userId = this.props.userId || "1234";
-
   componentDidMount() {
     this.fetchCards();
   }
 
   fetchCards = async () => {
+    const userId = this.props.userId;
     try {
-      const response = await fetch(`/api/cards/user?userId=${this.userId}`);
+      const response = await fetch(`/api/cards/user?userId=${userId}`);
       const cardData = await response.json();
 
       const cards = Object.entries(cardData).map(([cardId, card]) => ({
@@ -35,27 +34,27 @@ class CollectionPage extends Component {
     }
   };
 
-    addCard = async (card) => {
-      const cards = [...this.state.cards];
-      const index = cards.findIndex(c => c.cardId === card.cardId);
-      let addedPrice = card.cardPrice || 0;
+  addCard = async (card) => {
+    const cards = [...this.state.cards];
+    const index = cards.findIndex(c => c.cardId === card.cardId);
+    let addedPrice = card.cardPrice || 0;
 
-      if (index === -1) {
-        cards.push({ ...card, cardNumberOfCards: 1 });
-      } else {
-        cards[index] = { ...cards[index] };
-        cards[index].cardNumberOfCards++;
-      }
+    if (index === -1) {
+      cards.push({ ...card, cardNumberOfCards: 1 });
+    } else {
+      cards[index] = { ...cards[index] };
+      cards[index].cardNumberOfCards++;
+    }
 
-      this.setState(prevState => ({
-        cards,
-        totalPrice: prevState.totalPrice + addedPrice
-      }));
+    this.setState(prevState => ({
+      cards,
+      totalPrice: prevState.totalPrice + addedPrice
+    }));
 
-      await this.updateCardOnServer(cards[index] || card, cards[index]?.cardNumberOfCards || 1);
-    };
+    await this.updateCardOnServer(cards[index] || card, cards[index]?.cardNumberOfCards || 1);
+  };
 
-    subtractCard = async (card) => {
+  subtractCard = async (card) => {
     const cards = [...this.state.cards];
     const index = cards.findIndex(c => c.cardId === card.cardId);
 
@@ -80,14 +79,14 @@ class CollectionPage extends Component {
     await this.updateCardOnServer(card, count);
   };
 
-
   updateCardOnServer = async (card, count) => {
+    const userId = this.props.userId;
     try {
       await fetch("/api/cards/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: this.userId,
+          userId: userId,
           cardName: card.cardName,
           cardPrice: card.cardPrice,
           cardUrl: card.cardUrl,
@@ -104,19 +103,19 @@ class CollectionPage extends Component {
   render() {
     return (
       <div className="layout-container">
-      <div>
-        <div className = "main-container">
-        <h2>Your Collection</h2>
-        <p>Total Value: ${this.state.totalPrice.toFixed(2)}</p>
+        <div>
+          <div className = "main-container">
+            <h2>Your Collection</h2>
+            <p>Total Value: ${this.state.totalPrice.toFixed(2)}</p>
+          </div>
+          <div className="cards-container">
+            <Cards
+              cards={this.state.cards}
+              subtractCard={this.subtractCard}
+              addCard={this.addCard}
+            />
+          </div>
         </div>
-            <div className="cards-container">
-              <Cards
-                cards={this.state.cards}
-                subtractCard={this.subtractCard}
-                addCard={this.addCard}
-              />
-        </div>
-      </div>
       </div>
     );
   }

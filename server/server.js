@@ -161,14 +161,18 @@ app.post("/api/cards/update", async (req, res) => {
     if (!user) {
       user = new User({ userId, collection: {} });
     }
+    console.log('[Update Debug] userId:', userId, 'cardId:', cardId, 'count:', count);
+    console.log('[Update Debug] user.collection before:', user.collection);
     if (count > 0) {
       user.collection.set(cardId, { cardId, cardName, cardPrice, cardUrl, cardPicture, count });
     } else {
       user.collection.delete(cardId);
     }
     await user.save();
+    console.log('[Update Debug] user.collection after:', user.collection);
     res.json({ message: "User card data updated successfully", userCards: Object.fromEntries(user.collection) });
   } catch (err) {
+    console.error('[Update Debug] Error updating user:', err);
     res.status(500).json({ error: "Failed to update user data" });
   }
 });
