@@ -5,6 +5,7 @@ class Card extends Component {
 
     return (
           <div className="card">
+              <h3>{card.cardName}</h3>
               <img
                 src={card.cardPicture}
                 alt={card.cardName}
