@@ -34,20 +34,12 @@ function AppWithAuth0(props) {
 class App extends Component {
   state = {
     cards: [],
-<<<<<<< HEAD
-    userId:"1234",
     order: [
       {id: "Numerical", value: "numbers"},
-      {id: "Price (Acending)",
-        value: "most"
-      },
-      {id: "Price (Decending)",
-        value: "least"
-      }
+      {id: "Price (Acending)", value: "most"},
+      {id: "Price (Decending)", value: "least"}
     ],
     selectedOrder: ""
-=======
->>>>>>> a122de170c24f6acc4c1e43dd4f1e8e8da92445b
   };
 
   addCard = async (card) => {
@@ -113,31 +105,31 @@ class App extends Component {
   };
 
   displayCards = (data) => {
-  const sorted = this.sortCards(data, this.state.selectedOrder);
-  this.setState({ cards: sorted });
-};
+    const sorted = this.sortCards(data, this.state.selectedOrder);
+    this.setState({ cards: sorted });
+  };
 
   sortCards = (cards, selectedOrder) => {
-  switch (selectedOrder) {
-    case "numbers":
-      return [...cards].sort((a, b) => {
-        // Assuming cardId is a number or string like "001", "002"
-        return a.cardId.localeCompare(b.cardId, undefined, { numeric: true });
-      });
+    switch (selectedOrder) {
+      case "numbers":
+        return [...cards].sort((a, b) => {
+          // Assuming cardId is a number or string like "001", "002"
+          return a.cardId.localeCompare(b.cardId, undefined, { numeric: true });
+        });
 
-    case "most":
-      return [...cards].sort((a, b) => parseFloat(a.cardPrice) - parseFloat(b.cardPrice));
+      case "most":
+        return [...cards].sort((a, b) => parseFloat(a.cardPrice) - parseFloat(b.cardPrice));
 
-    case "least":
-      return [...cards].sort((a, b) => parseFloat(b.cardPrice) - parseFloat(a.cardPrice));
+      case "least":
+        return [...cards].sort((a, b) => parseFloat(b.cardPrice) - parseFloat(a.cardPrice));
 
-    default:
-      return cards;
-  }
-};
+      default:
+        return cards;
+    }
+  };
 
   selectedOrder = (event) => {
-     const selectedValue = event.target.value;
+    const selectedValue = event.target.value;
     const sorted = this.sortCards(this.state.cards, selectedValue);
 
     this.setState({
@@ -148,7 +140,6 @@ class App extends Component {
     console.log("Order Changed:", selectedValue);
   };
 
-  
   render() {
     return (
       <div className="layout-container">
@@ -160,25 +151,20 @@ class App extends Component {
           <Route path="/" element={
             <>
               <div className="main-container">
-<<<<<<< HEAD
-                <Display onDataFetched={this.displayCards} userId = {this.state.userId} />
-                    <select
-                        id="order"
-                        name="displayOrder"
-                        value={this.state.selectedOrder}
-                        onChange={this.selectedOrder}
-                      >
-                        {this.state.order.map(order => (
-                          <option key={order.id} value={order.value}>
-                            {order.id}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-=======
                 <Display onDataFetched={this.displayCards} userId={this.props.userId} />
+                <select
+                  id="order"
+                  name="displayOrder"
+                  value={this.state.selectedOrder}
+                  onChange={this.selectedOrder}
+                >
+                  {this.state.order.map(order => (
+                    <option key={order.id} value={order.value}>
+                      {order.id}
+                    </option>
+                  ))}
+                </select>
               </div>
->>>>>>> a122de170c24f6acc4c1e43dd4f1e8e8da92445b
               <div className="cards-container">
                 <Cards
                   cards={this.state.cards}
