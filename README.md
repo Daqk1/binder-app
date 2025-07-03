@@ -59,10 +59,10 @@ REACT_APP_AUTH0_CLIENT_ID=your-auth0-client-id
 Create a file at `server/.env` with the following:
 ```
 MONGODB_URI=your-mongodb-connection-string
-PORT=14000
+PORT=8000
 ```
 - `MONGODB_URI` can be from MongoDB Atlas or your local MongoDB instance.
-- `PORT` should match the proxy in `client/package.json` (default: 14000).
+- `PORT` should match the proxy in `client/package.json` (default: 8000).
 
 ---
 
@@ -73,7 +73,7 @@ npm start
 ```
 - This will start both the client (React) and server (Express) using `concurrently`.
 - The React app will be available at [http://localhost:3000](http://localhost:3000)
-- The backend API will run at [http://localhost:14000](http://localhost:14000)
+- The backend API will run at [http://localhost:8000](http://localhost:8000)
 
 ---
 

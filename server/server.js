@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const User = require('./user.model');
 
 const app = express();
-const PORT = 14000;
+const PORT = 8000;
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
