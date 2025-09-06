@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class SetList extends Component {
     state = {
         set: [
-            { value: "", id: "--Select Set--" },
             { value: "ancient-origins", id: "Ancient Origins" },
             { value: "aquapolis", id: "Aquapolis" },
             { value: "arceus", id: "Arceus" },
@@ -11,7 +10,7 @@ class SetList extends Component {
             { value: "base-set", id: "Base Set" },
             { value: "base-set-2", id: "Base Set 2" },
             { value: "battle-styles", id: "Battle Styles" },
-            { value: "black-&-white", id: "Black & White" },
+            { value: "black-and-white", id: "Black & White" },
             { value: "black-bolt", id: "Black Bolt" },
             { value: "boundaries-crossed", id: "Boundaries Crossed" },
             { value: "breakpoint", id: "Breakpoint" },
@@ -32,7 +31,7 @@ class SetList extends Component {
             { value: "deoxys", id: "Deoxys" },
             { value: "destined-rivals", id: "Destined Rivals" },
             { value: "detective-pikachu", id: "Detective Pikachu" },
-            { value: "diamond-&-pearl", id: "Diamond & Pearl" },
+            { value: "diamond-and-pearl", id: "Diamond & Pearl" },
             { value: "dragon", id: "Dragon" },
             { value: "dragon-frontiers", id: "Dragon Frontiers" },
             { value: "dragon-majesty", id: "Dragon Majesty" },
@@ -43,7 +42,7 @@ class SetList extends Component {
             { value: "evolving-skies", id: "Evolving Skies" },
             { value: "expedition", id: "Expedition" },
             { value: "fates-collide", id: "Fates Collide" },
-            { value: "fire-red-&-leaf-green", id: "Fire Red & Leaf Green" },
+            { value: "fire-red-and-leaf-green", id: "Fire Red & Leaf Green" },
             { value: "flashfire", id: "Flashfire" },
             { value: "forbidden-light", id: "Forbidden Light" },
             { value: "fossil", id: "Fossil" },
@@ -55,7 +54,7 @@ class SetList extends Component {
             { value: "guardians-rising", id: "Guardians Rising" },
             { value: "gym-challenge", id: "Gym Challenge" },
             { value: "gym-heroes", id: "Gym Heroes" },
-            { value: "heartgold-&-soulsilver", id: "HeartGold & SoulSilver" },
+            { value: "heartgold-and-soulsilver", id: "HeartGold & SoulSilver" },
             { value: "heartgold-soulsilver", id: "HeartGold SoulSilver" },
             { value: "hidden-fates", id: "Hidden Fates" },
             { value: "hidden-legends", id: "Hidden Legends" },
@@ -91,10 +90,10 @@ class SetList extends Component {
             { value: "rebel-clash", id: "Rebel Clash" },
             { value: "rising-rivals", id: "Rising Rivals" },
             { value: "roaring-skies", id: "Roaring Skies" },
-            { value: "ruby-&-sapphire", id: "Ruby & Sapphire" },
+            { value: "ruby-and-sapphire", id: "Ruby & Sapphire" },
             { value: "sandstorm", id: "Sandstorm" },
-            { value: "scarlet-&-violet", id: "Scarlet & Violet" },
-            { value: "scarlet-&-violet-151", id: "Pokemon 151" },
+            { value: "scarlet-and-violet", id: "Scarlet & Violet" },
+            { value: "scarlet-and-violet-151", id: "Pokemon 151" },
             { value: "secret-wonders", id: "Secret Wonders" },
             { value: "shining-fates", id: "Shining Fates" },
             { value: "shining-legends", id: "Shining Legends" },
@@ -104,11 +103,11 @@ class SetList extends Component {
             { value: "steam-siege", id: "Steam Siege" },
             { value: "stellar-crown", id: "Stellar Crown" },
             { value: "stormfront", id: "Stormfront" },
-            { value: "sun-&-moon", id: "Sun & Moon" },
+            { value: "sun-and-moon", id: "Sun & Moon" },
             { value: "supreme-victors", id: "Supreme Victors" },
             { value: "surging-sparks", id: "Surging Sparks" },
-            { value: "sword-&-shield", id: "Sword & Shield" },
-            { value: "team-magma-&-team-aqua", id: "Team Magma & Team Aqua" },
+            { value: "sword-and-shield", id: "Sword & Shield" },
+            { value: "team-magma-and-team-aqua", id: "Team Magma & Team Aqua" },
             { value: "team-rocket", id: "Team Rocket" },
             { value: "team-rocket-returns", id: "Team Rocket Returns" },
             { value: "team-up", id: "Team Up" },
@@ -126,15 +125,40 @@ class SetList extends Component {
             { value: "xy", id: "XY" }
         ],
         selectedSet: "",
-        selectedName: ""
+        selectedName: "",
+        setSearchText: "",
+        filteredSets: []
     }
+    componentDidMount() {
+        this.setState({ filteredSets: this.state.set });
+    }
+
     handleSetChange = (event) => {
         this.setState({ selectedSet: event.target.value });
     };
+    
     handleNameChange = (e) =>{
         this.setState({selectedName: e.target.value});
         console.log("Name input:", e.target.value);
-
+    }
+    
+    handleSetSearchChange = (e) => {
+        const searchText = e.target.value.toLowerCase();
+        const filtered = this.state.set.filter(set => 
+            set.id.toLowerCase().includes(searchText) || 
+            set.value.toLowerCase().includes(searchText)
+        );
+        this.setState({ 
+            setSearchText: e.target.value,
+            filteredSets: filtered
+        });
+    }
+    
+    handleSetSelect = (setValue) => {
+        this.setState({ 
+            selectedSet: setValue,
+            setSearchText: this.state.set.find(s => s.value === setValue)?.id || ""
+        });
     }
     render() { 
         return (
@@ -146,17 +170,25 @@ class SetList extends Component {
             <input id = "pokemonName" name = "pokemonName" value = {this.state.selectedName} onChange = {this.handleNameChange}/>
             <br />
             <label htmlFor="pokemonSet">Pokemon Set</label>
-            <select   
-            id="pokemonSet"
-                    name="pokemonSet"
-                    value={this.state.selectedSet}
-                    onChange={this.handleSetChange}>
-                {this.state.set.map(set => (
-                <option key={set.value} value={set.value}>
-                    {set.id}
-                </option>
+            <input 
+                id="pokemonSetSearch"
+                name="pokemonSetSearch"
+                type="text"
+                placeholder="Type to search sets..."
+                value={this.state.setSearchText}
+                onChange={this.handleSetSearchChange}
+            />
+            <div className="set-scroller">
+                {this.state.filteredSets.map(set => (
+                    <div 
+                        key={set.value} 
+                        className={`set-item ${this.state.selectedSet === set.value ? 'selected' : ''}`}
+                        onClick={() => this.handleSetSelect(set.value)}
+                    >
+                        {set.id}
+                    </div>
                 ))}
-            </select>
+            </div>
             <br /><br />
             <div id="error"></div>
             <button type="button" onClick={() => {

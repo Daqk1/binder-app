@@ -4,7 +4,13 @@ import Cards from '../components/cards';
 class CollectionPage extends Component {
   state = {
     cards: [],
-    totalPrice: 0
+    totalPrice: 0,
+    order: [
+      {id: "Numerical", value: "numbers"},
+      {id: "Price (Ascending)", value: "most"},
+      {id: "Price (Descending)", value: "least"}
+    ],
+    selectedOrder: ""
   };
 
   componentDidMount() {
@@ -28,7 +34,8 @@ class CollectionPage extends Component {
         0
       );
 
-      this.setState({ cards, totalPrice });
+      const sortedCards = this.sortCards(cards, this.state.selectedOrder);
+      this.setState({ cards: sortedCards, totalPrice });
     } catch (error) {
       console.error("Error fetching cards:", error);
     }
@@ -100,20 +107,94 @@ class CollectionPage extends Component {
     }
   };
 
+  sortCards = (cards, selectedOrder) => {
+    switch (selectedOrder) {
+      case "numbers":
+        return [...cards].sort((a, b) => {
+          return a.cardId.localeCompare(b.cardId, undefined, { numeric: true });
+        });
+      case "most":
+        return [...cards].sort((a, b) => parseFloat(a.cardPrice) - parseFloat(b.cardPrice));
+      case "least":
+        return [...cards].sort((a, b) => parseFloat(b.cardPrice) - parseFloat(a.cardPrice));
+      default:
+        return cards;
+    }
+  };
+
+  selectedOrder = (event) => {
+    const selectedValue = event.target.value;
+    const sorted = this.sortCards(this.state.cards, selectedValue);
+    this.setState({
+      selectedOrder: selectedValue,
+      cards: sorted
+    });
+    console.log("Collection Order Changed:", selectedValue);
+  };
+
   render() {
+    const { cards, totalPrice } = this.state;
+    const totalCards = cards.reduce((sum, card) => sum + (card.cardNumberOfCards || 0), 0);
+    const uniqueCards = cards.length;
+
     return (
       <div className="layout-container">
-        <div>
-          <div className = "main-container">
-            <h2>Your Collection</h2>
-            <p>Total Value: ${this.state.totalPrice.toFixed(2)}</p>
+        <div className="collection-content">
+          <div className="collection-header">
+            <h1 className="collection-title">Your Collection</h1>
+            <p className="collection-subtitle">Track and manage your Pokémon card collection</p>
+            <div className="total-value">
+              Total Value: ${totalPrice.toFixed(2)}
+            </div>
+            <div className="collection-stats">
+              <div className="stat-item">
+                <div className="stat-value">{totalCards}</div>
+                <div className="stat-label">Total Cards</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">{uniqueCards}</div>
+                <div className="stat-label">Unique Cards</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">{totalCards > 0 ? (totalPrice / totalCards).toFixed(2) : '0.00'}</div>
+                <div className="stat-label">Avg. Value</div>
+              </div>
+            </div>
           </div>
-          <div className="cards-container">
-            <Cards
-              cards={this.state.cards}
-              subtractCard={this.subtractCard}
-              addCard={this.addCard}
-            />
+          
+          <div className="collection-cards">
+            <h2 className="collection-cards-title">Your Cards</h2>
+            {cards.length > 0 && (
+              <div className="borders collection-sort">
+                <label htmlFor="collectionOrder">Sort Cards</label>
+                <select
+                  id="collectionOrder"
+                  name="collectionOrder"
+                  value={this.state.selectedOrder}
+                  onChange={this.selectedOrder}
+                >
+                  {this.state.order.map(order => (
+                    <option key={order.value} value={order.value}>
+                      {order.id}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div className="collection-cards-grid">
+              {cards.length > 0 ? (
+                <Cards
+                  cards={cards}
+                  subtractCard={this.subtractCard}
+                  addCard={this.addCard}
+                />
+              ) : (
+                <div className="empty-collection">
+                  <h3>No Cards in Collection</h3>
+                  <p>Start building your collection by searching for cards on the home page!</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

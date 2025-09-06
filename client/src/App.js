@@ -149,30 +149,31 @@ class App extends Component {
         </nav>
         <Routes>
           <Route path="/" element={
-            <>
+            <div className="main-content">
               <div className="main-container">
                 <Display onDataFetched={this.displayCards} userId={this.props.userId} />
-                <select
-                  id="order"
-                  name="displayOrder"
-                  value={this.state.selectedOrder}
-                  onChange={this.selectedOrder}
-                >
-                  {this.state.order.map(order => (
-                    <option key={order.id} value={order.value}>
-                      {order.id}
-                    </option>
-                  ))}
-                </select>
+                <div className="borders">
+                  <label htmlFor="order">Sort Cards</label>
+                  <select
+                    id="order"
+                    name="displayOrder"
+                    value={this.state.selectedOrder}
+                    onChange={this.selectedOrder}
+                  >
+                    {this.state.order.map(order => (
+                      <option key={order.id} value={order.value}>
+                        {order.id}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="cards-container">
-                <Cards
-                  cards={this.state.cards}
-                  subtractCard={this.subtractCard}
-                  addCard={this.addCard}
-                />
-              </div>
-            </>
+              <Cards
+                cards={this.state.cards}
+                subtractCard={this.subtractCard}
+                addCard={this.addCard}
+              />
+            </div>
           } />
           <Route path="/collection" element={<CollectionPage userId={this.props.userId} />} />
         </Routes>
