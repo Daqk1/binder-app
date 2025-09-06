@@ -10,7 +10,7 @@ function DisplayWrapper(props) {
 }
 
 class Display extends Component {
- fetchCards = async (setName = "journey-together", cardName = "") => {
+ fetchCards = async (setName = "white-flare", cardName = "") => {
   const userId = this.props.userId || "1234";
   console.log("[Auth Debug] fetchCards using userId:", userId);
   try {

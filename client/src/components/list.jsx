@@ -12,6 +12,7 @@ class SetList extends Component {
             { value: "base-set-2", id: "Base Set 2" },
             { value: "battle-styles", id: "Battle Styles" },
             { value: "black-&-white", id: "Black & White" },
+            { value: "black-bolt", id: "Black Bolt" },
             { value: "boundaries-crossed", id: "Boundaries Crossed" },
             { value: "breakpoint", id: "Breakpoint" },
             { value: "breakthrough", id: "Breakthrough" },
@@ -29,6 +30,7 @@ class SetList extends Component {
             { value: "dark-explorers", id: "Dark Explorers" },
             { value: "darkness-ablaze", id: "Darkness Ablaze" },
             { value: "deoxys", id: "Deoxys" },
+            { value: "destined-rivals", id: "Destined Rivals" },
             { value: "detective-pikachu", id: "Detective Pikachu" },
             { value: "diamond-&-pearl", id: "Diamond & Pearl" },
             { value: "dragon", id: "Dragon" },
@@ -120,6 +122,7 @@ class SetList extends Component {
             { value: "unleashed", id: "Unleashed" },
             { value: "unseen-forces", id: "Unseen Forces" },
             { value: "vivid-voltage", id: "Vivid Voltage" },
+            { value: "white-flare", id: "White Flare" },
             { value: "xy", id: "XY" }
         ],
         selectedSet: "",
