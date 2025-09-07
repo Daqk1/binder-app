@@ -1,48 +1,18 @@
-import './App.css';
 import React, { Component } from 'react';
-import Cards from './components/cards';
-import Display from './components/display';
-import { Link } from 'react-router-dom';
-import { Routes, Route } from "react-router-dom";
-import CollectionPage from './pages/collection';
-import JapanesePage from './pages/japanese'; 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAuth0 } from "@auth0/auth0-react";
+import Cards from '../components/cards';
+import Display from '../components/display';
 
-function AuthButtons() {
-  const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
-
-  if (isLoading) return null;
-  if (!isAuthenticated) {
-    return <button onClick={() => loginWithRedirect()}>Log In</button>;
-  }
-  return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1em' }}>
-      <span>Welcome, {user.name || user.email}!</span>
-      <button onClick={() => logout({ returnTo: window.location.origin })}>Log Out</button>
-    </div>
-  );
-}
-
-// Functional wrapper to inject userId from Auth0
-function AppWithAuth0(props) {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  // Use Auth0 user.sub as userId if authenticated, else fallback to '1234'
-  const userId = isAuthenticated && user ? user.sub : "1234";
-  return <App {...props} userId={userId} />;
-}
-
-class App extends Component {
+class JapanesePage extends Component {
   state = {
     cards: [],
     order: [
       {id: "Numerical", value: "numbers"},
-      {id: "Price (Acending)", value: "most"},
-      {id: "Price (Decending)", value: "least"}
+      {id: "Price (Ascending)", value: "most"},
+      {id: "Price (Descending)", value: "least"}
     ],
     selectedOrder: ""
   };
-
+  
   addCard = async (card) => {
     const cards = [...this.state.cards];
     const index = cards.findIndex(c => c.cardId === card.cardId);
@@ -114,7 +84,6 @@ class App extends Component {
     switch (selectedOrder) {
       case "numbers":
         return [...cards].sort((a, b) => {
-          // Assuming cardId is a number or string like "001", "002"
           return a.cardId.localeCompare(b.cardId, undefined, { numeric: true });
         });
 
@@ -138,50 +107,40 @@ class App extends Component {
       cards: sorted
     });
 
-    console.log("Order Changed:", selectedValue);
+    console.log("Japanese Page Order Changed:", selectedValue);
   };
 
   render() {
     return (
       <div className="layout-container">
-        <nav>
-          <Link to="/">English</Link> | <Link to="/japanese">Japanese</Link> | <Link to="/collection">Collection</Link>
-          {' '}<AuthButtons />
-        </nav>
-        <Routes>
-          <Route path="/" element={
-            <div className="main-content">
-              <div className="main-container">
-                <Display onDataFetched={this.displayCards} userId={this.props.userId} />
-                <div className="borders">
-                  <label htmlFor="order">Sort Cards</label>
-                  <select
-                    id="order"
-                    name="displayOrder"
-                    value={this.state.selectedOrder}
-                    onChange={this.selectedOrder}
-                  >
-                    {this.state.order.map(order => (
-                      <option key={order.id} value={order.value}>
-                        {order.id}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <Cards
-                cards={this.state.cards}
-                subtractCard={this.subtractCard}
-                addCard={this.addCard}
-              />
+        <div className="main-content">
+          <div className="main-container">
+            <Display onDataFetched={this.displayCards} userId={this.props.userId} isJapanese={true} />
+            <div className="borders">
+              <label htmlFor="order">Sort Cards</label>
+              <select
+                id="order"
+                name="displayOrder"
+                value={this.state.selectedOrder}
+                onChange={this.selectedOrder}
+              >
+                {this.state.order.map(order => (
+                  <option key={order.id} value={order.value}>
+                    {order.id}
+                  </option>
+                ))}
+              </select>
             </div>
-          } />
-          <Route path="/collection" element={<CollectionPage userId={this.props.userId} />} />
-          <Route path="/japanese" element={<JapanesePage userId={this.props.userId} />} />
-        </Routes>
+          </div>
+          <Cards
+            cards={this.state.cards}
+            subtractCard={this.subtractCard}
+            addCard={this.addCard}
+          />
+        </div>
       </div>
     );
   }
 }
 
-export default AppWithAuth0;
+export default JapanesePage;

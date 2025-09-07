@@ -25,6 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 const dataDir = path.join(__dirname, "pokemon_data");
+const jpDataDir = path.join(__dirname, "jppokemon_data");
 const userDataDir = path.join(__dirname, "user_data");
 
 if (!fs.existsSync(userDataDir)) fs.mkdirSync(userDataDir);
@@ -64,9 +65,59 @@ const sets = [
   "prismatic-evolutions", "journey-together",  "destined-rivals", "white-flare", "black-bolt", "promo"
 ];
 
+const japaneseSets = [
+  "japanese-promo", "japanese-expansion-pack", "japanese-jungle", "japanese-mystery-of-the-fossils",
+  "japanese-glory-of-team-rocket", "japanese-leaders%27-stadium", "japanese-challenge-from-the-darkness",
+  "japanese-gold-silver-new-world", "japanese-crossing-the-ruins", "japanese-awakening-legends",
+  "japanese-darkness-and-to-light", "japanese-vs", "japanese-web", "japanese-the-town-on-no-map",
+  "japanese-wind-from-the-sea", "japanese-split-earth", "japanese-mysterious-mountains",
+  "japanese-miracle-of-the-desert", "japanese-rulers-of-the-heavens", "japanese-undone-seal",
+  "japanese-flight-of-legends", "japanese-clash-of-the-blue-sky", "japanese-rocket-gang-strikes-back",
+  "japanese-golden-sky-silvery-ocean", "japanese-mirage-forest", "japanese-holon-research",
+  "japanese-holon-phantom", "japanese-miracle-crystal", "japanese-offense-and-defense-of-the-furthest-ends",
+  "japanese-world-champions-pack", "japanese-space-time", "japanese-secret-of-the-lakes",
+  "japanese-shining-darkness", "japanese-moonlit-pursuit", "japanese-cry-from-the-mysterious",
+  "japanese-temple-of-anger", "japanese-dawn-dash", "japanese-intense-fight-in-the-destroyed-sky",
+  "japanese-galactic%27s-conquest", "japanese-bonds-to-the-end-of-time", "japanese-beat-of-the-frontier",
+  "japanese-advent-of-arceus", "japanese-soulsilver-collection", "japanese-reviving-legends",
+  "japanese-clash-at-the-summit", "japanese-sword", "japanese-shield", "japanese-vmax-rising",
+  "japanese-rebel-clash", "japanese-explosive-walker", "japanese-infinity-zone",
+  "japanese-legendary-heartbeat", "japanese-amazing-volt-tackle", "japanese-shiny-star-v",
+  "japanese-single-strike-master", "japanese-rapid-strike-master", "japanese-matchless-fighter",
+  "japanese-silver-lance", "japanese-jet-black-spirit", "japanese-eevee-heroes",
+  "japanese-skyscraping-perfection", "japanese-blue-sky-stream", "japanese-fusion-arts",
+  "japanese-25th-anniversary-collection", "japanese-vmax-climax", "japanese-star-birth",
+  "japanese-battle-region", "japanese-time-gazer", "japanese-space-juggler",
+  "japanese-dark-phantasma", "japanese-go", "japanese-lost-abyss", "japanese-incandescent-arcana",
+  "japanese-paradigm-trigger", "japanese-vstar-universe", "japanese-scarlet-ex",
+  "japanese-violet-ex", "japanese-triplet-beat", "japanese-snow-hazard", "japanese-clay-burst",
+  "japanese-scarlet-and-violet-151", "japanese-ruler-of-the-black-flame", "japanese-raging-surf",
+  "japanese-ancient-roar", "japanese-future-flash", "japanese-mega-brave", "japanese-mega-symphonia",
+  "japanese-shiny-treasure-ex", "japanese-battle-partners", "japanese-night-wanderer"
+];
+
 const cardCache = {};
+// Load English sets
 sets.forEach(set => {
   const filePath = path.join(dataDir, `${set}.json`);
+  if (fs.existsSync(filePath)) {
+    try {
+      const data = fs.readFileSync(filePath, "utf-8");
+      const json = JSON.parse(data);
+      if (Array.isArray(json)) {
+        cardCache[set] = json;
+      } else {
+        console.warn(`⚠️ ${set}.json is not an array`);
+      }
+    } catch (err) {
+      console.error(`❌ Error reading ${set}.json:`, err.message);
+    }
+  }
+});
+
+// Load Japanese sets
+japaneseSets.forEach(set => {
+  const filePath = path.join(jpDataDir, `${set}.json`);
   if (fs.existsSync(filePath)) {
     try {
       const data = fs.readFileSync(filePath, "utf-8");
@@ -102,8 +153,8 @@ const writeUserData = (userId, data) => {
 };
 
 app.get("/api/cards", (req, res) => {
-  const { setName, cardName } = req.query;
-  console.log("Query params:", { setName, cardName });
+  const { setName, cardName, searchType } = req.query;
+  console.log("Query params:", { setName, cardName, searchType });
 
   if (!setName && !cardName) {
     return res.json([]);
@@ -112,12 +163,20 @@ app.get("/api/cards", (req, res) => {
   let allCards = [];
 
   if (setName) {
-    if (!sets.includes(setName)) {
+    if (!sets.includes(setName) && !japaneseSets.includes(setName)) {
       return res.status(404).json({ error: `Unknown set "${setName}".` });
     }
     allCards = cardCache[setName] || [];
   } else if (cardName) {
-    allCards = Object.values(cardCache).flat();
+    // Search specific type of sets based on searchType parameter
+    if (searchType === "japanese") {
+      allCards = japaneseSets.flatMap(set => cardCache[set] || []);
+    } else if (searchType === "english") {
+      allCards = sets.flatMap(set => cardCache[set] || []);
+    } else {
+      // Default: search all sets (backward compatibility)
+      allCards = Object.values(cardCache).flat();
+    }
   }
 
   console.log(`Filtering ${allCards.length} cards by cardName:`, cardName);
