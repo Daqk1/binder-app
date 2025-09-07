@@ -87,6 +87,7 @@ class SetList extends Component {
             { value: "power-keepers", id: "Power Keepers" },
             { value: "primal-clash", id: "Primal Clash" },
             { value: "prismatic-evolutions", id: "Prismatic Evolutions" },
+            { value: "promo", id: "Promos" },
             { value: "rebel-clash", id: "Rebel Clash" },
             { value: "rising-rivals", id: "Rising Rivals" },
             { value: "roaring-skies", id: "Roaring Skies" },

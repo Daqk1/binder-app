@@ -61,7 +61,7 @@ const sets = [
   "crown-zenith", "scarlet-and-violet", "paldea-evolved",
   "obsidian-flames", "paradox-rift", "scarlet-and-violet-151", "paldean-fates", "temporal-forces",
   "twilight-masquerade", "shrouded-fable", "stellar-crown", "surging-sparks",
-  "prismatic-evolutions", "journey-together",  "destined-rivals", "white-flare", "black-bolt"
+  "prismatic-evolutions", "journey-together",  "destined-rivals", "white-flare", "black-bolt", "promo"
 ];
 
 const cardCache = {};
