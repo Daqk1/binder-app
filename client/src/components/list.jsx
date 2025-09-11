@@ -216,6 +216,7 @@ class SetList extends Component {
             { value: "japanese-shiny-treasure-ex", id: "Japanese Shiny Treasure Ex" },
             { value: "japanese-battle-partners", id: "Japanese Battle Partners" },
             { value: "japanese-night-wanderer", id: "Japanese Night Wanderer" },
+            { value: "japanese-terastal-festival", id: "Japanese Terastal Festival" },
         ],
         selectedSet: "",
         selectedName: "",

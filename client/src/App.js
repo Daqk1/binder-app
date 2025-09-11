@@ -27,8 +27,14 @@ function AuthButtons() {
 // Functional wrapper to inject userId from Auth0
 function AppWithAuth0(props) {
   const { user, isAuthenticated, isLoading } = useAuth0();
-  // Use Auth0 user.sub as userId if authenticated, else fallback to '1234'
-  const userId = isAuthenticated && user ? user.sub : "1234";
+  
+  // Wait for Auth0 to finish loading before rendering
+  if (isLoading) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
+  }
+  
+  // Use Auth0 user.sub as userId if authenticated, else null (no fallback)
+  const userId = isAuthenticated && user ? user.sub : null;
   return <App {...props} userId={userId} />;
 }
 
@@ -55,6 +61,12 @@ class App extends Component {
     }
 
     this.setState({ cards });
+
+    // Don't update server if userId is null
+    if (!this.props.userId) {
+      console.log("[Auth Debug] No userId, skipping server update");
+      return;
+    }
 
     try {
       await fetch("/api/cards/update", {
@@ -85,6 +97,12 @@ class App extends Component {
     cards[index].cardNumberOfCards--;
 
     this.setState({ cards });
+
+    // Don't update server if userId is null
+    if (!this.props.userId) {
+      console.log("[Auth Debug] No userId, skipping server update");
+      return;
+    }
 
     try {
       await fetch("/api/cards/update", {

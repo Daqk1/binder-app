@@ -4,16 +4,28 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 function DisplayWrapper(props) {
   const { user, isAuthenticated } = useAuth0();
-  const userId = isAuthenticated && user ? user.sub : props.userId || "1234";
+  const userId = isAuthenticated && user ? user.sub : props.userId;
   console.log("[Auth Debug] DisplayWrapper userId:", userId, "isAuthenticated:", isAuthenticated, "user:", user);
+  
+  // Don't render if userId is null (user not authenticated)
+  if (!userId) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>Please log in to view cards</div>;
+  }
+  
   return <Display {...props} userId={userId} />;
 }
 
 class Display extends Component {
  fetchCards = async (setName = "", cardName = "") => {
-  const userId = this.props.userId || "1234";
+  const userId = this.props.userId;
   console.log("[Auth Debug] fetchCards using userId:", userId);
   console.log("[Debug] fetchCards called with setName:", setName, "cardName:", cardName);
+  
+  // Don't fetch if userId is null
+  if (!userId) {
+    console.log("[Auth Debug] No userId, skipping fetch");
+    return;
+  }
   
   try {
     // If no set is selected, search entire database (English or Japanese)

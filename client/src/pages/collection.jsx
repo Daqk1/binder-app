@@ -19,6 +19,13 @@ class CollectionPage extends Component {
 
   fetchCards = async () => {
     const userId = this.props.userId;
+    
+    // Don't fetch if userId is null
+    if (!userId) {
+      console.log("[Auth Debug] No userId, skipping collection fetch");
+      return;
+    }
+    
     try {
       const response = await fetch(`/api/cards/user?userId=${userId}`);
       const cardData = await response.json();
@@ -88,6 +95,13 @@ class CollectionPage extends Component {
 
   updateCardOnServer = async (card, count) => {
     const userId = this.props.userId;
+    
+    // Don't update if userId is null
+    if (!userId) {
+      console.log("[Auth Debug] No userId, skipping server update");
+      return;
+    }
+    
     try {
       await fetch("/api/cards/update", {
         method: "POST",
